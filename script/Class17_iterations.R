@@ -25,7 +25,8 @@ dfWhales
 
 fn_uniqueSpecies <- function(df) {
   df.unique <- df %>%
-    group_by(species_name) %>%
+    filter(!is.na(bin_uri)) %>%
+    group_by(bin_uri) %>%
     summarize(num_species = length(unique(species_name))) %>%
     arrange(desc(num_species))
   return(df.unique)
@@ -72,7 +73,7 @@ ls_mammals[1] %>% class()
 ls_mammals[[1]] %>% class()
 
 for( i in 1:2) {
-  fn_uniqueSpecies(ls_mammals[i])
+  fn_uniqueSpecies(ls_mammals[[i]])
 }
 
 # TODO for you in class: Fix the code!!!!!!!
@@ -220,7 +221,8 @@ fn_uniqueSpecies(dfMice) %>%
 
 ## __ Data input and cleaning ----
 #We can read this file in from hard disk as follows and view a summary of the data.
-df_traits <- read_tsv("../data/PanTHERIA.tsv")
+df_traits <- read_tsv("C://Users/draco/OneDrive/Documents/uni course work/BINF6210/rscript/Github practice/nov05_iteration/data/PanTHERIA.tsv")
+
 summary(df_traits)
 
 #Let's look at the data in the viewer. What do we notice? Lots of -999. That's commonly used to indicate missing data! As the last time we worked with this dataset, let's clean this up.
@@ -344,6 +346,7 @@ class(ls_traits_berg_genus[[1]])
 head(ls_traits_berg_genus[[1]])
 
 #Fitting a linear model to test if mid-range latitude is a predictor of body mass among species within every genus remaining in the filtered dataset. I've done a log (base 10) transformation in body mass, because body mass is so highly right skewed, as we've seen before. Note I've used the absolute value of mid-range latitude so that, for example, values near Antarctica are considered similar to Arctic values (both cold, polar).
+# make sure theres the correct x and y axis for the regression
 ls_models_berg <- map(ls_traits_berg_genus, 
                     function(x) lm(log10(x$AdultBodyMass_g) ~ abs(x$GR_MidRangeLat_dd)))
 
@@ -386,4 +389,5 @@ t.test(df_models[, 3], mu = 0)
 
 # Start from
 df_traits_berg %>% 
-  ggplot(aes()) # continue adding code here :-)
+  ggplot(aes(x = GR_MidRangeLat_dd, y = AdultBodyMass_g, colour = Genus)) + geom_point() +
+  stat_smooth(method = "lm") # continue adding code here :-)
