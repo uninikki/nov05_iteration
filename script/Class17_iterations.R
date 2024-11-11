@@ -25,7 +25,8 @@ dfWhales
 
 fn_uniqueSpecies <- function(df) {
   df.unique <- df %>%
-    group_by(species_name) %>%
+    filter(!is.na(bin_uri)) %>%
+    group_by(bin_uri) %>%
     summarize(num_species = length(unique(species_name))) %>%
     arrange(desc(num_species))
   return(df.unique)
@@ -72,7 +73,7 @@ ls_mammals[1] %>% class()
 ls_mammals[[1]] %>% class()
 
 for( i in 1:2) {
-  fn_uniqueSpecies(ls_mammals[i])
+  fn_uniqueSpecies(ls_mammals[[i]])
 }
 
 # TODO for you in class: Fix the code!!!!!!!
@@ -344,6 +345,7 @@ class(ls_traits_berg_genus[[1]])
 head(ls_traits_berg_genus[[1]])
 
 #Fitting a linear model to test if mid-range latitude is a predictor of body mass among species within every genus remaining in the filtered dataset. I've done a log (base 10) transformation in body mass, because body mass is so highly right skewed, as we've seen before. Note I've used the absolute value of mid-range latitude so that, for example, values near Antarctica are considered similar to Arctic values (both cold, polar).
+# make sure theres the correct x and y axis for the regression
 ls_models_berg <- map(ls_traits_berg_genus, 
                     function(x) lm(log10(x$AdultBodyMass_g) ~ abs(x$GR_MidRangeLat_dd)))
 
