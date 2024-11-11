@@ -221,7 +221,8 @@ fn_uniqueSpecies(dfMice) %>%
 
 ## __ Data input and cleaning ----
 #We can read this file in from hard disk as follows and view a summary of the data.
-df_traits <- read_tsv("../data/PanTHERIA.tsv")
+df_traits <- read_tsv("C://Users/draco/OneDrive/Documents/uni course work/BINF6210/rscript/Github practice/nov05_iteration/data/PanTHERIA.tsv")
+
 summary(df_traits)
 
 #Let's look at the data in the viewer. What do we notice? Lots of -999. That's commonly used to indicate missing data! As the last time we worked with this dataset, let's clean this up.
@@ -388,4 +389,5 @@ t.test(df_models[, 3], mu = 0)
 
 # Start from
 df_traits_berg %>% 
-  ggplot(aes()) # continue adding code here :-)
+  ggplot(aes(x = GR_MidRangeLat_dd, y = AdultBodyMass_g, colour = Genus)) + geom_point() +
+  stat_smooth(method = "lm") # continue adding code here :-)
